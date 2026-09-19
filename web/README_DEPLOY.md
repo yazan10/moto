@@ -23,14 +23,14 @@ git push -u origin main
 1. Vercel Dashboard -> Add New -> Project -> Import `yazan10/moto`
 2. Root Directory = `web/site`
 3. Framework Preset = Other
-4. Env Variables:
+4. Env Variables (تضعها في Vercel Dashboard فقط - لا تضعها في الكود):
    - `LATEST_VERSION=1.0.0`
    - `MIN_REQUIRED_VERSION=1.0.0`
    - `FORCE_UPDATE=false`
    - `DOWNLOAD_URL=https://moto-site.vercel.app/download`
    - `NOTIFICATION_JSON={"active":false,"message":""}`
-   - `ADMIN_TOKEN=اختر_توكن_عشوائي_طويل_32حرف`
-   - `ADMIN_PASSWORD_HASH=$2b$12$EukP1fhUmuFbtLPP/JZIfuLmWtPQ8I5N0sng92azxeWQDMgb3QtoK`  (هذا hash لـ yaz@#5)
+   - `ADMIN_TOKEN` (32 حرف عشوائي - Env فقط)
+   - `ADMIN_PASSWORD_HASH` (bcrypt hash - Env فقط - لا يظهر في الكود)
 5. Deploy -> سيعطيك رابط مثل `moto-site-xyz.vercel.app` -> اربطه بدومين مخصص من Settings -> Domains
 
 ### الأدمن المخفي (admin) - رابط منفصل
@@ -44,7 +44,7 @@ git push -u origin main
 
 ## 3. كيف ترسل إشعار وتوقف النسخ القديمة
 
-افتح رابط الأدمن المخفي -> سجل دخول `yaz@#5` -> غير:
+افتح رابط الأدمن المخفي -> سجل دخول (رمز الدخول محفوظ في Vercel Env فقط) -> غير:
 - `latest` و `minRequired` 
 - فعل `forceUpdate` = true
 - اكتب رسالة الإشعار

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - MotoLK</title>
+<title>System Access</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@700&display=swap" rel="stylesheet">
 <style>
 *{font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:700;box-sizing:border-box}
@@ -26,13 +26,13 @@ small{color:#64748b;font-size:11px}
 </head>
 <body>
 <div class="card" id="login-card">
-  <h1>🔐 دخول الأدمن المخفي</h1>
-  <p class="sub">هذا الرابط مخفي - لا تشاركه. الحماية عبر ADMIN_TOKEN + Hash</p>
-  <label>كلمة السر</label>
-  <input id="pw" type="password" placeholder="yaz@#5">
+  <h1>🔐 دخول النظام</h1>
+  <p class="sub">نظام آمن - دخول مصرح فقط</p>
+  <label>رمز الدخول</label>
+  <input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">
   <button id="login-btn" onclick="login()">دخول</button>
   <div id="login-msg" class="msg hidden"></div>
-  <small>يتم التحقق عبر POST /api/admin/login بدون كشف الباسورد في الكود</small>
+  <small style="opacity:0.4">نظام حماية متقدم</small>
 </div>
 
 <div class="card hidden" id="dash-card">
