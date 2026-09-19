@@ -22,7 +22,7 @@
 
 // ===== Server-linked Kill-Switch & Notifications (by yaz) =====
 #define APP_VERSION "1.0.0"
-#define SERVER_URL "https://moto-site.vercel.app/api/version"
+#define SERVER_URL "https://site-sigma-one-83.vercel.app/api/version"
 
 inline bool checkServerVersion(bool &shouldExit) {
     shouldExit = false;
