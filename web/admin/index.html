@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - MotoLK</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@700&display=swap" rel="stylesheet">
+<style>
+*{font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:700;box-sizing:border-box}
+body{background:#020617;color:#e2e8f0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:28px;width:420px;max-width:95%}
+h1{color:#38bdf8;font-size:18px;margin-bottom:6px;text-align:center}
+.sub{color:#64748b;font-size:12px;text-align:center;margin-bottom:18px}
+label{font-size:13px;color:#cbd5e1}
+input,textarea,select{width:100%;background:#020617;border:1px solid #1e293b;color:#fff;border-radius:10px;padding:10px 12px;margin:6px 0 12px;font-size:13px}
+button{width:100%;background:#38bdf8;color:#020617;border:none;border-radius:10px;padding:12px;cursor:pointer;font-size:14px}
+button:disabled{opacity:.6;cursor:not-allowed}
+.hidden{display:none}
+.msg{margin-top:12px;padding:10px;border-radius:8px;font-size:12px;text-align:center}
+.msg.ok{background:#065f46;color:#a7f3d0}
+.msg.err{background:#7f1d1d;color:#fecaca}
+.row{display:flex;gap:10px}
+.row>div{flex:1}
+small{color:#64748b;font-size:11px}
+</style>
+</head>
+<body>
+<div class="card" id="login-card">
+  <h1>🔐 دخول الأدمن المخفي</h1>
+  <p class="sub">هذا الرابط مخفي - لا تشاركه. الحماية عبر ADMIN_TOKEN + Hash</p>
+  <label>كلمة السر</label>
+  <input id="pw" type="password" placeholder="yaz@#5">
+  <button id="login-btn" onclick="login()">دخول</button>
+  <div id="login-msg" class="msg hidden"></div>
+  <small>يتم التحقق عبر POST /api/admin/login بدون كشف الباسورد في الكود</small>
+</div>
+
+<div class="card hidden" id="dash-card">
+  <h1>⚙️ لوحة التحكم - MotoLK</h1>
+  <p class="sub">إرسال إشعار + إيقاف النسخ القديمة (Kill-Switch)</p>
+
+  <div class="row">
+    <div><label>آخر إصدار (latest)</label><input id="latest" value="1.0.0"></div>
+    <div><label>أقل إصدار مسموح (minRequired)</label><input id="minReq" value="1.0.0"></div>
+  </div>
+  <label>رابط التحميل</label>
+  <input id="dl" value="https://moto-site.vercel.app/download">
+
+  <label><input id="force" type="checkbox"> تفعيل الإيقاف الإجباري للنسخ القديمة (forceUpdate)</label>
+  <small style="display:block;margin-bottom:10px">عند التفعيل: أي أداة بإصدار < minRequired ستتوقف فوراً وتعرض رسالة تحديث</small>
+
+  <label>نص الإشعار</label>
+  <textarea id="notif" rows="3" placeholder="مثال: تم صدور تحديث إجباري 1.0.1 - يرجى التحديث"></textarea>
+  <label><input id="notifActive" type="checkbox" checked> تفعيل الإشعار</label>
+
+  <button id="send-btn" onclick="sendUpdate()">إرسال التحديث + الإشعار</button>
+  <button onclick="logout()" style="background:transparent;border:1px solid #334155;color:#94a3b8;margin-top:8px">خروج</button>
+  <div id="dash-msg" class="msg hidden"></div>
+
+  <hr style="margin:16px 0;border:none;border-top:1px solid #1e293b">
+  <small>السيرفر يبقى مرتبط بالأداة عبر <code>/api/version</code> - الأداة تفحصه عند كل تشغيل</small>
+</div>
+
+<script>
+// غيّر هذا لدومين موقعك الرئيسي بعد النشر
+const SITE_API = localStorage.getItem('site_api') || 'https://moto-site.vercel.app';
+let adminToken = localStorage.getItem('admin_token') || '';
+
+function showMsg(id, text, ok){
+  const el=document.getElementById(id);
+  el.textContent=text; el.className='msg '+(ok?'ok':'err'); el.classList.remove('hidden');
+}
+async function login(){
+  const pw=document.getElementById('pw').value;
+  const btn=document.getElementById('login-btn');
+  btn.disabled=true; btn.textContent='جاري التحقق...';
+  try{
+    const r=await fetch(SITE_API + '/api/admin/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({password:pw})
+    });
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||'فشل');
+    adminToken=j.token;
+    localStorage.setItem('admin_token', adminToken);
+    document.getElementById('login-card').classList.add('hidden');
+    document.getElementById('dash-card').classList.remove('hidden');
+    loadCurrent();
+  }catch(e){ showMsg('login-msg','خطأ: '+e.message,false); }
+  btn.disabled=false; btn.textContent='دخول';
+}
+async function loadCurrent(){
+  try{
+    const r=await fetch(SITE_API + '/api/version'); const j=await r.json();
+    document.getElementById('latest').value=j.latest;
+    document.getElementById('minReq').value=j.minRequired;
+    document.getElementById('force').checked=j.forceUpdate;
+    document.getElementById('dl').value=j.downloadUrl;
+    if(j.notification){ document.getElementById('notif').value=j.notification.message||''; document.getElementById('notifActive').checked=j.notification.active; }
+  }catch(e){}
+}
+async function sendUpdate(){
+  const btn=document.getElementById('send-btn'); btn.disabled=true; btn.textContent='جاري الإرسال...';
+  const body={
+    latest: document.getElementById('latest').value,
+    minRequired: document.getElementById('minReq').value,
+    forceUpdate: document.getElementById('force').checked,
+    downloadUrl: document.getElementById('dl').value,
+    notification:{ active: document.getElementById('notifActive').checked, message: document.getElementById('notif').value }
+  };
+  try{
+    const r=await fetch(SITE_API + '/api/admin/update', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token': adminToken},
+      body: JSON.stringify(body)
+    });
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||j.message);
+    showMsg('dash-msg','✅ تم الإرسال بنجاح - النسخ القديمة ستتوقف اذا فعلت forceUpdate',true);
+  }catch(e){ showMsg('dash-msg','خطأ: '+e.message,false); }
+  btn.disabled=false; btn.textContent='إرسال التحديث + الإشعار';
+}
+function logout(){ localStorage.removeItem('admin_token'); location.reload(); }
+if(adminToken){ document.getElementById('login-card').classList.add('hidden'); document.getElementById('dash-card').classList.remove('hidden'); loadCurrent(); }
+</script>
+</body>
+</html>

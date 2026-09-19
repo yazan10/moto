@@ -1,0 +1,24 @@
+# Secrets - لا ترفع التوكنات أبداً
+.env
+.env.local
+.env.production
+vercel.json
+.vercel
+*.log
+
+# Build
+build/
+*.o
+*.so
+*.dll
+*.exe
+moc_*
+qrc_*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (for web/)
+web/site/node_modules/
+web/admin/node_modules/

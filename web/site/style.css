@@ -1,0 +1,26 @@
+/* IBM Plex Sans Arabic 700 - المطلوب */
+*{font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:700;box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0f1e;color:#e6eaf2;line-height:1.7}
+.container{max-width:1100px;margin:auto;padding:0 20px}
+.header{background:#0f172a;border-bottom:1px solid #1e293b;padding:16px 0;position:sticky;top:0;z-index:10}
+.header .container{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;color:#38bdf8}.logo span{color:#f8fafc;font-size:14px;opacity:.7}
+nav a{color:#cbd5e1;margin-left:16px;text-decoration:none;font-size:14px}
+nav a:hover{color:#38bdf8}
+.hero{text-align:center;padding:70px 20px;background:radial-gradient(600px 300px at 50% -50px, #1e3a5f 0, transparent 70%)}
+.hero h2{font-size:34px;margin-bottom:12px;color:#fff}
+.hero p{color:#94a3b8;max-width:700px;margin:0 auto 22px}
+.btn{display:inline-block;padding:12px 26px;border-radius:10px;text-decoration:none;margin:6px;font-size:15px}
+.btn-primary{background:#38bdf8;color:#0a0f1e}
+.btn-outline{border:1px solid #38bdf8;color:#38bdf8}
+.version-info{font-size:13px;color:#fbbf24;margin-top:12px}
+.notify-bar{background:#f59e0b;color:#0a0f1e;text-align:center;padding:12px;font-size:14px}
+.notify-bar.hidden{display:none}
+.features{padding:50px 20px}.features h3,.download h3{font-size:24px;margin-bottom:20px;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px}
+.card h4{color:#38bdf8;margin-bottom:8px;font-size:16px}
+.card p{color:#94a3b8;font-size:13px}
+.download{text-align:center;padding:40px 20px;border-top:1px solid #1e293b;margin-top:20px}
+.small{font-size:12px;color:#64748b;margin-top:10px}
+.footer{text-align:center;padding:30px 10px;color:#64748b;border-top:1px solid #1e293b;margin-top:40px;font-size:13px}
